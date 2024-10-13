@@ -5,6 +5,8 @@ class AppAssets {
   static const news2 = 'assets/Images/News1.png';
   static const news3 = 'assets/Images/News2.png';
   static const news4 = 'assets/Images/News3.png';
+  static const detailPage = 'assets/Images/DetailNews.png';
+  static const avatar = 'assets/Images/Avatar.png';
 
   static const shareIcon = 'assets/Icon/share.png';
   static const chatIcon = 'assets/Icon/chat.png';
