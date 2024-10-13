@@ -3,44 +3,33 @@ import 'package:firebase_auth/firebase_auth.dart'; // Tambahkan ini untuk Fireba
 import 'package:tugas_8/app/theme/app_color.dart';
 import 'package:tugas_8/custom/widget/custom_box_image.dart';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  _RegisterPageState createState() => _RegisterPageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
-  // Tambahkan controller untuk mendapatkan input pengguna
+class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
 
-  // Tambahkan fungsi untuk register dengan Firebase
-  Future<void> _registerWithEmailPassword() async {
-    // Validasi input
-    if (_passwordController.text != _confirmPasswordController.text) {
-      // Tampilkan pesan error jika password tidak cocok
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Password dan Konfirmasi Password tidak cocok")),
-      );
-      return;
-    }
-    
+  // Fungsi untuk login menggunakan Firebase
+  Future<void> _loginWithEmailPassword() async {
     try {
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
-      // Navigasi ke halaman berikutnya jika berhasil
+      // Jika berhasil login
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Pendaftaran Berhasil!")),
+        SnackBar(content: Text("Login Berhasil!")),
       );
-      // TODO: Tambahkan navigasi ke halaman utama atau lain setelah berhasil mendaftar
+      // TODO: Navigasi ke halaman utama atau dashboard setelah berhasil login
     } on FirebaseAuthException catch (e) {
-      // Tampilkan pesan error Firebase
+      // Tangani error login
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message ?? "Pendaftaran Gagal")),
+        SnackBar(content: Text(e.message ?? "Login Gagal")),
       );
     }
   }
@@ -60,13 +49,12 @@ class _RegisterPageState extends State<RegisterPage> {
                   height: 330,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('assets/Images/Register.png'),
+                      image: AssetImage('assets/Images/Login.png'),
                     ),
                   ),
                 ),
               ),
               SizedBox(height: 40,),
-
               CustomTextFormField(
                 label: 'Masukkan Email',
                 controller: _emailController,
@@ -76,24 +64,30 @@ class _RegisterPageState extends State<RegisterPage> {
                 controller: _passwordController,
                 obscureText: true,
               ),
-              CustomTextFormField(
-                label: 'Konfirmasi Password',
-                controller: _confirmPasswordController,
-                obscureText: true,
+              Row(
+                children: [
+                  Spacer(),
+                  GestureDetector(
+                    onTap: () {
+                      // Tambahkan logika untuk reset password
+                    },
+                    child: Text('Lupa Password?'),
+                  ),
+                ],
               ),
-
+              SizedBox(height: 30,),
               SizedBox(
                 height: 52,
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(8)
                     ),
-                    backgroundColor: Color(0xff3498DB),
+                    backgroundColor: Color(0xff3498DB)
                   ),
-                  onPressed: _registerWithEmailPassword, 
-                  child: Text('Mendaftar', style: TextStyle(color: whiteColor, fontWeight: FontWeight.bold)),
+                  onPressed: _loginWithEmailPassword, 
+                  child: Text('Masuk', style: TextStyle(color: whiteColor, fontWeight: FontWeight.bold)),
                 ),
               ),
               SizedBox(height: 40,),
@@ -107,7 +101,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Text('Atau Daftar Menggunakan', style: TextStyle(color: Color(0xffc0c0c0)),),
+                    child: Text('Atau Masuk Menggunakan', style: TextStyle(color: Color(0xffc0c0c0))),
                   ),
                   Expanded(
                     child: Divider(
@@ -126,9 +120,9 @@ class _RegisterPageState extends State<RegisterPage> {
                     foregroundColor: whiteColor,
                     shape: RoundedRectangleBorder(
                       side: BorderSide(color: Colors.red),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(8)
                     ),
-                    backgroundColor: whiteColor,
+                    backgroundColor: whiteColor
                   ),
                   onPressed: () {}, 
                   child: Row(
@@ -139,35 +133,36 @@ class _RegisterPageState extends State<RegisterPage> {
                         height: 33,
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: AssetImage('assets/Images/google.png'),
-                          ),
+                            image: AssetImage('assets/Images/google.png')
+                          )
                         ),
                       ),
                       Text(
                         'Google', 
                         style: TextStyle(
                           color: Colors.red, 
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.bold
                         ),
                       ),
-                      SizedBox(width: 30,),
+                      SizedBox(width: 30,)
                     ],
-                  ),
+                  )
                 ),
               ),
               SizedBox(height: 49,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Sudah Punya Akun? Silahkan '),
+                  Text('Belum Punya Akun? Silahkan '),
                   GestureDetector(
                     onTap: () {
-                      // Navigasi ke halaman login
+                      // Tambahkan navigasi ke halaman register
                     },
-                    child: Text('masuk', style: TextStyle(color: Color(0xff3498db))),
+                    child: Text('Mendaftar ', style: TextStyle(color: Color(0xff3498db))),
                   ),
+                  Text('Sekarang')
                 ],
-              ),
+              )
             ],
           ),
         ),
@@ -199,12 +194,12 @@ class CustomTextFormField extends StatelessWidget {
           label: Text(
             label, 
             style: TextStyle(
-              color: Color(0xffC0C0C0),
+              color: Color(0xffC0C0C0)
             ),
           ),
           border: OutlineInputBorder(
-            borderSide: BorderSide(color: Color(0xffC0C0C0)),
-          ),
+            borderSide: BorderSide(color: Color(0xffC0C0C0))
+          )
         ),
       ),
     );
